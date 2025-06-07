@@ -1,26 +1,19 @@
 function getLocation() {
-    const output = document.getElementById('output');
+  const output = document.getElementById('output');
 
-    if (!navigator.geolocation) {
-      output.textContent = "Geolocalização não é suportada neste navegador.";
-      return;
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const { latitude, longitude } = position.coords;
+
+      output.innerHTML = `
+        <a href="https://www.google.com/maps?q=${latitude},${longitude}" 
+           target="_blank" rel="noopener noreferrer" class="link-location">
+          Analisar Localização
+        </a>
+      `;
+    },
+    (error) => {
+      output.textContent = 'Não foi possível obter a localização.';
     }
-
-    output.textContent = "Obtendo localização...";
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        output.innerHTML = `
-          Latitude: ${latitude.toFixed(6)}<br>
-          Longitude: ${longitude.toFixed(6)}<br>
-          <a href="https://www.google.com/maps?q=${latitude},${longitude}" target="_blank">
-            Ver no Google Maps
-          </a>
-        `;
-      },
-      (error) => {
-        output.textContent = "Erro ao obter localização: " + error.message;
-      }
-    );
-  }
+  );
+}
